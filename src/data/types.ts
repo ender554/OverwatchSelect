@@ -10,21 +10,6 @@ export type NewMapProperty =
   | "Environmental Hazards"
   | "Low Mobility Maps";
 
-export type UnifiedMapProperty =
-  | "High Ground Control"
-  | "Open Skybox"
-  | "Vertical Engagements"
-  | "Tight Chokes"
-  | "Long Sightlines"
-  | "Enclosed Spaces"
-  | "Low Mobility Maps"
-  | "Flank Routes"
-  | "Multiple Flank Routes"
-  | "High Mobility Paths" // Equivalent to Vertical Engagements
-  | "Close-Quarters Combat" // Equivalent to Tight Chokes
-  | "Choke-Heavy Maps" // Equivalent to Tight Chokes
-  | "Environmental Hazards"; // Equivalent to Multiple Flank Routes
-
 export type SynergyProperty =
   | "Dive Synergy"
   | "Sustain Synergy"
