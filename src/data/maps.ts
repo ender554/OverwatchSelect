@@ -1,4 +1,4 @@
-import { NewMapProperty } from "./types";
+import { NewMapProperty } from "../types/MapTypes";
 // Create a union type of all valid property keys for validation
 
 export interface IMapData {

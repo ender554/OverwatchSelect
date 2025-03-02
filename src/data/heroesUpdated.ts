@@ -1,11 +1,10 @@
 import {
   TankProvides,
-  NewMapProperty,
   SupportProvides,
   DamageProvides,
   Drawbacks,
-} from "./types";
-
+} from "../types/HeroTypes";
+import { NewMapProperty } from "../types/MapTypes";
 export interface IHeroType {
   name: string;
   role: "Tank" | "Damage" | "Support";
@@ -793,7 +792,7 @@ export const damage: IDamageType[] = [
     ],
   },
   {
-    name: "Torbjörn",
+    name: "Torbjorn",
     role: "Damage",
     provides: ["Sustain Pressure", "Zone Control", "Utility/CC Support"],
     tankNeeds: ["Zone Control", "Peel & Protection"],
