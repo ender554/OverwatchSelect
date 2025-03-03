@@ -1,21 +1,26 @@
 // src/components/ResultsTable.tsx
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useMapScoreContext } from "../context/MapScoreContext";
-import { maps } from "../data/maps";
+import { useTeamCompContext } from "../context/TeamCompContext";
 import { bellCurveTransform } from "../utils/heroScores";
 
-// Helper function to sanitize hero names for image file names
+// Helper to sanitize hero names for image filenames.
 const sanitizeHeroName = (name: string) =>
   name.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 const ResultsTable: React.FC = () => {
   const { selectedMapName, selectedRole, heroMapScores } = useMapScoreContext();
+  const teamContext = useTeamCompContext();
 
-  // Sort heroes for the selected map.
+  useEffect(() => {
+    console.log("Full Team Context:", teamContext);
+  }, [teamContext]);
+
+  // If no map is selected, we'll show all heroes (using defaults).
   const sortedHeroRankings = useMemo(() => {
-    if (!selectedMapName) return [];
+    if (!selectedMapName) return heroMapScores;
     const relevantHeroes = heroMapScores.filter(
-      (hms) => hms.mapScores[selectedMapName]
+      (hero) => hero.mapScores[selectedMapName] !== undefined
     );
     relevantHeroes.sort(
       (a, b) =>
@@ -24,24 +29,8 @@ const ResultsTable: React.FC = () => {
     return relevantHeroes;
   }, [selectedMapName, heroMapScores]);
 
-  const currentMap = useMemo(
-    () => maps.find((map) => map.name === selectedMapName),
-    [selectedMapName]
-  );
-
-  if (!selectedMapName || !currentMap) {
-    return null;
-  }
-
-  const tanksData = sortedHeroRankings.filter((hms) => hms.role === "Tank");
-  const damageData = sortedHeroRankings.filter((hms) => hms.role === "Damage");
-  const supportData = sortedHeroRankings.filter(
-    (hms) => hms.role === "Support"
-  );
-
   return (
     <div>
-      <h2>Hero Map Scores for {selectedMapName}</h2>
       <div
         style={{
           display: "grid",
@@ -57,30 +46,37 @@ const ResultsTable: React.FC = () => {
                 <tr>
                   <th>Hero</th>
                   <th>Bell-Curved Score</th>
+                  <th>Synergy Score</th>
                 </tr>
               </thead>
               <tbody>
-                {tanksData.map((hms) => {
-                  const { score } = hms.mapScores[selectedMapName];
-                  const bcScore = bellCurveTransform(
-                    score,
-                    hms.mean,
-                    hms.stdDev
-                  );
-                  return (
-                    <tr key={hms.hero}>
-                      <td>
-                        <img
-                          src={`/heroThumbs/${sanitizeHeroName(hms.hero)}.png`}
-                          alt={hms.hero}
-                          width={75}
-                          height={75}
-                        />
-                      </td>
-                      <td>{bcScore.toFixed(2)}</td>
-                    </tr>
-                  );
-                })}
+                {sortedHeroRankings
+                  .filter((hero) => hero.role === "Tank")
+                  .map((hero) => {
+                    const rawScore = selectedMapName
+                      ? hero.mapScores[selectedMapName].score
+                      : 0;
+                    const bcScore = selectedMapName
+                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
+                      : 0;
+                    return (
+                      <tr key={hero.name}>
+                        <td>
+                          <img
+                            src={`/heroThumbs/${sanitizeHeroName(
+                              hero.name
+                            )}.png`}
+                            alt={hero.name}
+                            width={75}
+                            height={75}
+                          />
+                          <div>{hero.name}</div>
+                        </td>
+                        <td>{bcScore.toFixed(2)}</td>
+                        <td>{hero.synergyScore}</td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
@@ -93,30 +89,37 @@ const ResultsTable: React.FC = () => {
                 <tr>
                   <th>Hero</th>
                   <th>Bell-Curved Score</th>
+                  <th>Synergy Score</th>
                 </tr>
               </thead>
               <tbody>
-                {damageData.map((hms) => {
-                  const { score } = hms.mapScores[selectedMapName];
-                  const bcScore = bellCurveTransform(
-                    score,
-                    hms.mean,
-                    hms.stdDev
-                  );
-                  return (
-                    <tr key={hms.hero}>
-                      <td>
-                        <img
-                          src={`/heroThumbs/${sanitizeHeroName(hms.hero)}.png`}
-                          alt={hms.hero}
-                          width={75}
-                          height={75}
-                        />
-                      </td>
-                      <td>{bcScore.toFixed(2)}</td>
-                    </tr>
-                  );
-                })}
+                {sortedHeroRankings
+                  .filter((hero) => hero.role === "Damage")
+                  .map((hero) => {
+                    const rawScore = selectedMapName
+                      ? hero.mapScores[selectedMapName].score
+                      : 0;
+                    const bcScore = selectedMapName
+                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
+                      : 0;
+                    return (
+                      <tr key={hero.name}>
+                        <td>
+                          <img
+                            src={`/heroThumbs/${sanitizeHeroName(
+                              hero.name
+                            )}.png`}
+                            alt={hero.name}
+                            width={75}
+                            height={75}
+                          />
+                          <div>{hero.name}</div>
+                        </td>
+                        <td>{bcScore.toFixed(2)}</td>
+                        <td>{hero.synergyScore}</td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
@@ -129,30 +132,37 @@ const ResultsTable: React.FC = () => {
                 <tr>
                   <th>Hero</th>
                   <th>Bell-Curved Score</th>
+                  <th>Synergy Score</th>
                 </tr>
               </thead>
               <tbody>
-                {supportData.map((hms) => {
-                  const { score } = hms.mapScores[selectedMapName];
-                  const bcScore = bellCurveTransform(
-                    score,
-                    hms.mean,
-                    hms.stdDev
-                  );
-                  return (
-                    <tr key={hms.hero}>
-                      <td>
-                        <img
-                          src={`/heroThumbs/${sanitizeHeroName(hms.hero)}.png`}
-                          alt={hms.hero}
-                          width={75}
-                          height={75}
-                        />
-                      </td>
-                      <td>{bcScore.toFixed(2)}</td>
-                    </tr>
-                  );
-                })}
+                {sortedHeroRankings
+                  .filter((hero) => hero.role === "Support")
+                  .map((hero) => {
+                    const rawScore = selectedMapName
+                      ? hero.mapScores[selectedMapName].score
+                      : 0;
+                    const bcScore = selectedMapName
+                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
+                      : 0;
+                    return (
+                      <tr key={hero.name}>
+                        <td>
+                          <img
+                            src={`/heroThumbs/${sanitizeHeroName(
+                              hero.name
+                            )}.png`}
+                            alt={hero.name}
+                            width={75}
+                            height={75}
+                          />
+                          <div>{hero.name}</div>
+                        </td>
+                        <td>{bcScore.toFixed(2)}</td>
+                        <td>{hero.synergyScore}</td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

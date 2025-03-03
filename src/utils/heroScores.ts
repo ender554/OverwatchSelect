@@ -1,41 +1,12 @@
 // src/utils/heroScores.ts
-import { maps } from "../data/maps";
 import { tanks, supports, damage } from "../data/heroesUpdated";
+import { maps } from "../data/maps";
+import type { IHeroType } from "../types/HeroTypes";
 import scoreMapForHero from "./scoreMapForHero";
 
-// Combine heroes and create a role lookup.
-export const allHeroes = [...tanks, ...supports, ...damage];
-export const heroRoles: Record<string, "Tank" | "Damage" | "Support"> = {};
-tanks.forEach((t) => (heroRoles[t.name] = "Tank"));
-damage.forEach((d) => (heroRoles[d.name] = "Damage"));
-supports.forEach((s) => (heroRoles[s.name] = "Support"));
-
-export interface HeroMapScore {
-  hero: string;
-  role: "Tank" | "Damage" | "Support";
-  rawScores: number[]; // All raw map scores for this hero
-  mapScores: {
-    [mapName: string]: {
-      score: number; // Raw score = 100 - rank
-      rank: number; // Hero's place on that map
-      normalizedScore: number;
-    };
-  };
-  mean: number;
-  stdDev: number;
-}
-
-export function computeAllHeroMapScores(): HeroMapScore[] {
-  return allHeroes.map((heroData) => {
-    const heroName = heroData.name;
-    const role = heroRoles[heroName];
-
-    const mapEntries = maps.map((map) => {
-      const normalizedScore = scoreMapForHero(map.properties, heroData);
-      return { map: map.name, normalizedScore };
-    });
-    mapEntries.sort((a, b) => b.normalizedScore - a.normalizedScore);
-
+export function computeAllHeroMapScores(): IHeroType[] {
+  const allHeroes = [...tanks, ...supports, ...damage];
+  return allHeroes.map((hero) => {
     const mapScores: {
       [mapName: string]: {
         score: number;
@@ -43,33 +14,40 @@ export function computeAllHeroMapScores(): HeroMapScore[] {
         normalizedScore: number;
       };
     } = {};
-    const rawScoresArray: number[] = [];
-    mapEntries.forEach((entry, index) => {
-      const rank = index + 1;
-      const rawScore = 100 - rank;
+    // Compute a normalized score for each map (replace this with your actual logic)
+    const entries = maps.map((map) => {
+      const normalizedScore = scoreMapForHero(map.properties, hero);
+      return { map: map.name, normalizedScore };
+    });
+    entries.sort((a, b) => b.normalizedScore - a.normalizedScore);
+
+    const rawScores: number[] = [];
+    entries.forEach((entry, i) => {
+      const rank = i + 1;
+      const score = 100 - rank;
       mapScores[entry.map] = {
-        score: rawScore,
+        score,
         rank,
         normalizedScore: entry.normalizedScore,
       };
-      rawScoresArray.push(rawScore);
+      rawScores.push(score);
     });
 
-    const N = rawScoresArray.length;
-    const mean = rawScoresArray.reduce((acc, val) => acc + val, 0) / (N || 1);
+    const N = rawScores.length;
+    const mean = rawScores.reduce((acc, val) => acc + val, 0) / (N || 1);
     const variance =
-      rawScoresArray.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) /
+      rawScores.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) /
       (N || 1);
     const stdDev = Math.sqrt(variance);
 
     return {
-      hero: heroName,
-      role,
-      rawScores: rawScoresArray,
+      ...hero,
+      synergyScore: 0.0, // Initialize synergyScore to 0.0
       mapScores,
+      rawScores,
       mean,
       stdDev,
-    };
+    } as IHeroType;
   });
 }
 

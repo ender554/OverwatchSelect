@@ -1,7 +1,6 @@
-// src/context/MapScoreContext.tsx
 import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 import { computeAllHeroMapScores } from "../utils/heroScores";
-import type { HeroMapScore } from "../types/HeroMapScore"; // Updated import
+import type { IHeroType } from "../types/HeroTypes";
 
 interface MapScoreContextType {
   selectedMapName: string;
@@ -12,7 +11,7 @@ interface MapScoreContextType {
   setSelectedHeroes: (
     heroes: string[] | ((prev: string[]) => string[])
   ) => void;
-  heroMapScores: HeroMapScore[];
+  heroMapScores: IHeroType[];
 }
 
 const MapScoreContext = createContext<MapScoreContextType | undefined>(
@@ -24,7 +23,7 @@ export const MapScoreProvider = ({ children }: { children: ReactNode }) => {
   const [selectedRole, setSelectedRole] = useState<string>("All");
   const [selectedHeroes, setSelectedHeroes] = useState<string[]>([]);
 
-  const heroMapScores = useMemo<HeroMapScore[]>(
+  const heroMapScores = useMemo<IHeroType[]>(
     () => computeAllHeroMapScores(),
     []
   );

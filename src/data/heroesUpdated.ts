@@ -1,52 +1,4 @@
-import {
-  TankProvides,
-  SupportProvides,
-  DamageProvides,
-  Drawbacks,
-} from "../types/HeroTypes";
-import { NewMapProperty } from "../types/MapTypes";
-export interface IHeroType {
-  name: string;
-  role: "Tank" | "Damage" | "Support";
-}
-
-export interface ITankType extends IHeroType {
-  role: "Tank"; // This type is restricted to tanks.
-  provides: TankProvides[]; // What this tank provides to the team.
-  supportNeeds: SupportProvides[]; // What they need from their support.
-  damageNeeds: DamageProvides[]; // What they need from their DPS.
-  drawbacks: Drawbacks[]; // These are things they do that other heroes may hate
-  hates: Drawbacks[]; // These are things that they hate that can be a drawback from a teammate
-  friends?: IHeroType[]; // This is special consderation for favorite heroes.
-  mapLikes: NewMapProperty[]; // Maps properties that this tank likes to play on/with.
-  mapHates: NewMapProperty[]; // Maps properties that this tank hates to play on/with.
-}
-
-export interface IDamageType extends IHeroType {
-  role: "Damage";
-  provides: DamageProvides[]; // What this DPS provides.
-  tankNeeds: TankProvides[]; // What they need from their tank.
-  supportNeeds: SupportProvides[]; // What they need from their support.
-  damageNeeds: DamageProvides[]; // What they need from their DPS.
-  drawbacks: Drawbacks[]; // These are things they do that other heroes may hate
-  hates: Drawbacks[]; // These are things that they hate that can be a drawback from a teammate
-  friends?: IHeroType[]; // This is special consderation for favorite heroes.
-  mapLikes: NewMapProperty[]; // Maps properties that this DPS likes to play on/with.
-  mapHates: NewMapProperty[]; // Maps properties that this DPS hates to play on/with.
-}
-
-export interface ISupportType extends IHeroType {
-  role: "Support";
-  provides: SupportProvides[]; // What this support provides.
-  tankNeeds: TankProvides[]; // What they needs from tanks.
-  damageNeeds: DamageProvides[]; // What they needs from DPS.
-  supportNeeds: SupportProvides[]; // What they need from their support.
-  drawbacks: Drawbacks[]; // These are things they do that other heroes may hate
-  hates: Drawbacks[]; // These are things that they hate that can be a drawback from a teammate
-  friends?: IHeroType[]; // This is special consderation for favorite heroes.
-  mapLikes: NewMapProperty[]; // Maps properties that this support likes to play on/with.
-  mapHates: NewMapProperty[]; // Maps properties that this support hates to play on/with.
-}
+import { IDamageType, ISupportType, ITankType } from "../types/HeroTypes";
 
 export const tanks: ITankType[] = [
   {
@@ -68,9 +20,33 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Stationary Healing", "High Resource Demand", "Limited Mobility"],
     friends: [
-      { name: "Lucio", role: "Support" },
-      { name: "Tracer", role: "Damage" },
-      { name: "Juno", role: "Support" },
+      {
+        name: "Lucio",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Tracer",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Juno",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -84,6 +60,11 @@ export const tanks: ITankType[] = [
       "Choke-Heavy Maps",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Doomfist",
@@ -99,8 +80,24 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Stationary Healing", "High Resource Demand", "Limited Mobility"],
     friends: [
-      { name: "Lucio", role: "Support" },
-      { name: "Sombra", role: "Damage" },
+      {
+        name: "Lucio",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Sombra",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -115,6 +112,11 @@ export const tanks: ITankType[] = [
       "Choke-Heavy Maps",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Hazard",
@@ -137,8 +139,24 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Kiriko", role: "Support" },
-      { name: "Reaper", role: "Damage" },
+      {
+        name: "Kiriko",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -147,6 +165,11 @@ export const tanks: ITankType[] = [
       "Vertical Engagements",
     ],
     mapHates: ["Long Sightlines", "Choke-Heavy Maps", "Open Skybox"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Junker Queen",
@@ -166,8 +189,24 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Peel", "Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Moira", role: "Support" },
-      { name: "Reaper", role: "Damage" },
+      {
+        name: "Moira",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -176,6 +215,11 @@ export const tanks: ITankType[] = [
       "Low Mobility Maps",
     ],
     mapHates: ["Long Sightlines", "Open Skybox", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Mauga",
@@ -196,8 +240,24 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Passive Play", "Split Engagement", "Peel"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Reaper", role: "Damage" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -206,6 +266,11 @@ export const tanks: ITankType[] = [
       "Low Mobility Maps",
     ],
     mapHates: ["High Mobility Paths", "Flank Routes", "Long Sightlines"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Orisa",
@@ -225,11 +290,32 @@ export const tanks: ITankType[] = [
       "Peel",
     ],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["Long Sightlines", "Choke-Heavy Maps", "Low Mobility Maps"],
     mapHates: ["High Mobility Paths", "Flank Routes", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Ramattra",
@@ -245,8 +331,24 @@ export const tanks: ITankType[] = [
     drawbacks: ["Cooldown Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Peel", "Split Engagement", "Passive Play"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Sojourn", role: "Damage" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Sojourn",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -255,6 +357,11 @@ export const tanks: ITankType[] = [
       "Low Mobility Maps",
     ],
     mapHates: ["High Mobility Paths", "Flank Routes", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Reinhardt",
@@ -276,8 +383,24 @@ export const tanks: ITankType[] = [
       "Cooldown Dependent",
     ],
     friends: [
-      { name: "Lucio", role: "Support" },
-      { name: "Reaper", role: "Damage" },
+      {
+        name: "Lucio",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -286,6 +409,11 @@ export const tanks: ITankType[] = [
       "Enclosed Spaces",
     ],
     mapHates: ["High Mobility Paths", "Long Sightlines", "Flank Routes"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Roadhog",
@@ -301,8 +429,24 @@ export const tanks: ITankType[] = [
     drawbacks: ["Unstable Frontline", "Cooldown Dependent"],
     hates: ["Peel", "Split Engagement", "Passive Play", "Cooldown Dependent"],
     friends: [
-      { name: "Kiriko", role: "Support" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Kiriko",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -311,6 +455,11 @@ export const tanks: ITankType[] = [
       "Environmental Hazards",
     ],
     mapHates: ["Long Sightlines", "Choke-Heavy Maps", "High Mobility Paths"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Sigma",
@@ -328,8 +477,24 @@ export const tanks: ITankType[] = [
     drawbacks: ["Cooldown Dependent", "Limited Mobility"],
     hates: ["Forces Fast Engagements", "Split Engagement"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Ashe", role: "Damage" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Ashe",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -343,6 +508,11 @@ export const tanks: ITankType[] = [
       "Close-Quarters Combat",
       "Environmental Hazards",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Winston",
@@ -359,8 +529,24 @@ export const tanks: ITankType[] = [
     drawbacks: ["Cooldown Dependent", "High Resource Demand"],
     hates: ["Passive Play", "Limited Mobility", "Stationary Playstyle"],
     friends: [
-      { name: "Kiriko", role: "Support" },
-      { name: "Genji", role: "Damage" },
+      {
+        name: "Kiriko",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Genji",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -369,6 +555,11 @@ export const tanks: ITankType[] = [
       "Open Skybox",
     ],
     mapHates: ["Low Mobility Maps", "Long Sightlines", "Choke-Heavy Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Wrecking Ball",
@@ -393,8 +584,24 @@ export const tanks: ITankType[] = [
     ],
     hates: ["Passive Play", "Limited Mobility", "Stationary Playstyle"],
     friends: [
-      { name: "Sombra", role: "Damage" },
-      { name: "Tracer", role: "Damage" },
+      {
+        name: "Sombra",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Tracer",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -404,6 +611,11 @@ export const tanks: ITankType[] = [
       "Environmental Hazards",
     ],
     mapHates: ["Low Mobility Maps", "Long Sightlines", "Choke-Heavy Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Zarya",
@@ -419,8 +631,24 @@ export const tanks: ITankType[] = [
     drawbacks: ["Cooldown Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Split Engagement", "Passive Play"],
     friends: [
-      { name: "Reaper", role: "Damage" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Choke-Heavy Maps",
@@ -429,6 +657,11 @@ export const tanks: ITankType[] = [
       "Low Mobility Maps",
     ],
     mapHates: ["High Mobility Paths", "Flank Routes", "Open Skybox"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
 ];
 
@@ -443,8 +676,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Sigma", role: "Tank" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -458,6 +707,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Bastion",
@@ -478,8 +732,24 @@ export const damage: IDamageType[] = [
       "Split Engagement",
     ],
     friends: [
-      { name: "Orisa", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Orisa",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -493,6 +763,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Cassidy",
@@ -509,8 +784,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Forces Fast Engagements"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Orisa", role: "Tank" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Orisa",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -524,6 +815,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Echo",
@@ -539,8 +835,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Inconsistent Damage"],
     hates: ["Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Winston", role: "Tank" },
-      { name: "Mercy", role: "Support" },
+      {
+        name: "Winston",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Mercy",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -554,6 +866,11 @@ export const damage: IDamageType[] = [
       "Choke-Heavy Maps",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Genji",
@@ -575,8 +892,24 @@ export const damage: IDamageType[] = [
     ],
     hates: ["Stationary Healing", "Limited Mobility", "Passive Play"],
     friends: [
-      { name: "Zenyatta", role: "Support" },
-      { name: "Winston", role: "Tank" },
+      {
+        name: "Zenyatta",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Winston",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["High Mobility Paths", "Flank Routes", "Vertical Engagements"],
     mapHates: [
@@ -585,6 +918,11 @@ export const damage: IDamageType[] = [
       "Long Sightlines",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Hanzo",
@@ -596,8 +934,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Inconsistent Damage"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Zenyatta", role: "Support" },
-      { name: "Sigma", role: "Tank" },
+      {
+        name: "Zenyatta",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -611,6 +965,11 @@ export const damage: IDamageType[] = [
       "Enclosed Spaces",
       "Low Mobility Maps",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Junkrat",
@@ -622,8 +981,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Inconsistent Damage"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Roadhog", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Roadhog",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Choke-Heavy Maps",
@@ -634,6 +1009,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
     ],
     mapHates: ["Long Sightlines", "Open Skybox", "High Mobility Paths"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Mei",
@@ -650,8 +1030,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Split Engagement", "Passive Play"],
     friends: [
-      { name: "Orisa", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Orisa",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Choke-Heavy Maps",
@@ -660,6 +1056,11 @@ export const damage: IDamageType[] = [
       "Close-Quarters Combat",
     ],
     mapHates: ["High Mobility Paths", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Pharah",
@@ -671,11 +1072,32 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Inconsistent Damage"],
     hates: ["Split Engagement"],
     friends: [
-      { name: "Mercy", role: "Support" },
-      { name: "Zenyatta", role: "Support" },
+      {
+        name: "Mercy",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Zenyatta",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["Open Skybox", "Vertical Engagements", "Flank Routes"],
     mapHates: ["Close-Quarters Combat", "Choke-Heavy Maps", "Enclosed Spaces"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Reaper",
@@ -687,8 +1109,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Cooldown Dependent", "Set-Up Dependent"],
     hates: ["Unstable Frontline", "Passive Play"],
     friends: [
-      { name: "Moira", role: "Support" },
-      { name: "Junker Queen", role: "Tank" },
+      {
+        name: "Moira",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Junker Queen",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -697,6 +1135,11 @@ export const damage: IDamageType[] = [
       "Choke-Heavy Maps",
     ],
     mapHates: ["Long Sightlines", "Open Skybox", "High Mobility Paths"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Sojourn",
@@ -708,8 +1151,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Cooldown Dependent", "Peel"],
     hates: ["Unstable Frontline", "Passive Play"],
     friends: [
-      { name: "Ramattra", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Ramattra",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -718,6 +1177,11 @@ export const damage: IDamageType[] = [
       "Choke-Heavy Maps",
     ],
     mapHates: ["Close-Quarters Combat", "Enclosed Spaces", "Low Mobility Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Soldier: 76",
@@ -729,8 +1193,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent"],
     hates: ["Unstable Frontline", "Passive Play"],
     friends: [
-      { name: "Baptiste", role: "Support" },
-      { name: "Orisa", role: "Tank" },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Orisa",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -743,6 +1223,11 @@ export const damage: IDamageType[] = [
       "Enclosed Spaces",
       "Vertical Engagements",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Sombra",
@@ -754,8 +1239,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Split Engagement"],
     hates: ["Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Wrecking Ball", role: "Tank" },
-      { name: "Juno", role: "Support" },
+      {
+        name: "Wrecking Ball",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Juno",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Flank Routes",
@@ -764,6 +1265,11 @@ export const damage: IDamageType[] = [
       "Choke-Heavy Maps",
     ],
     mapHates: ["Long Sightlines", "Open Skybox", "Low Mobility Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Symmetra",
@@ -775,8 +1281,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Stationary Playstyle", "Limited Mobility"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Zarya", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Zarya",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Choke-Heavy Maps",
@@ -790,6 +1312,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Torbjorn",
@@ -801,8 +1328,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Set-Up Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Orisa", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Orisa",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Choke-Heavy Maps",
@@ -816,6 +1359,11 @@ export const damage: IDamageType[] = [
       "Vertical Engagements",
       "Open Skybox",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Tracer",
@@ -835,8 +1383,24 @@ export const damage: IDamageType[] = [
     ],
     hates: ["Stationary Healing", "Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Wrecking Ball", role: "Tank" },
-      { name: "Kiriko", role: "Support" },
+      {
+        name: "Wrecking Ball",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Kiriko",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -850,6 +1414,11 @@ export const damage: IDamageType[] = [
       "Long Sightlines",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Venture",
@@ -861,8 +1430,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Split Engagement", "Cooldown Dependent", "Set-Up Dependent"],
     hates: ["Stationary Healing", "Passive Play", "Limited Mobility"],
     friends: [
-      { name: "Winston", role: "Tank" },
-      { name: "Kiriko", role: "Support" },
+      {
+        name: "Winston",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Kiriko",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -877,6 +1462,11 @@ export const damage: IDamageType[] = [
       "Long Sightlines",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Widowmaker",
@@ -888,8 +1478,24 @@ export const damage: IDamageType[] = [
     drawbacks: ["Stationary Playstyle", "Set-Up Dependent", "Passive Play"],
     hates: ["Unstable Frontline", "Peel", "Forces Fast Engagements"],
     friends: [
-      { name: "Sigma", role: "Tank" },
-      { name: "Baptiste", role: "Support" },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Baptiste",
+        role: "Support",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["Long Sightlines", "Open Skybox", "Choke-Heavy Maps"],
     mapHates: [
@@ -898,6 +1504,11 @@ export const damage: IDamageType[] = [
       "Flank Routes",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
 ];
 
@@ -921,8 +1532,24 @@ export const supports: ISupportType[] = [
     ],
     hates: ["Unstable Frontline", "Split Engagement", "Limited Mobility"],
     friends: [
-      { name: "Reinhardt", role: "Tank" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Reinhardt",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -931,6 +1558,11 @@ export const supports: ISupportType[] = [
       "Enclosed Spaces",
     ],
     mapHates: ["High Mobility Paths", "Flank Routes", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Baptiste",
@@ -952,8 +1584,24 @@ export const supports: ISupportType[] = [
     drawbacks: ["Set-Up Dependent", "Stationary Healing"],
     hates: ["Unstable Frontline", "Passive Play", "Split Engagement"],
     friends: [
-      { name: "Sigma", role: "Tank" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -962,6 +1610,11 @@ export const supports: ISupportType[] = [
       "Enclosed Spaces",
     ],
     mapHates: ["High Mobility Paths", "Flank Routes", "Vertical Engagements"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Brigitte",
@@ -980,8 +1633,24 @@ export const supports: ISupportType[] = [
     drawbacks: ["Set-Up Dependent", "Limited Mobility"],
     hates: ["Unstable Frontline", "Split Engagement"],
     friends: [
-      { name: "Reinhardt", role: "Tank" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Reinhardt",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -995,6 +1664,11 @@ export const supports: ISupportType[] = [
       "Long Sightlines",
       "Vertical Engagements",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Illari",
@@ -1022,8 +1696,24 @@ export const supports: ISupportType[] = [
       "Cooldown Dependent",
     ],
     friends: [
-      { name: "Sigma", role: "Tank" },
-      { name: "Cassidy", role: "Damage" },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Cassidy",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -1038,6 +1728,11 @@ export const supports: ISupportType[] = [
       "Close-Quarters Combat",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Juno",
@@ -1054,8 +1749,24 @@ export const supports: ISupportType[] = [
     drawbacks: ["Inconsistent Damage"],
     hates: ["Stationary Playstyle", "Passive Play"],
     friends: [
-      { name: "Wrecking Ball", role: "Tank" },
-      { name: "Tracer", role: "Damage" },
+      {
+        name: "Wrecking Ball",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Tracer",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -1070,6 +1781,11 @@ export const supports: ISupportType[] = [
       "Long Sightlines",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Kiriko",
@@ -1092,8 +1808,24 @@ export const supports: ISupportType[] = [
       "Set-Up Dependent",
     ],
     friends: [
-      { name: "Genji", role: "Damage" },
-      { name: "Winston", role: "Tank" },
+      {
+        name: "Genji",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Winston",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "High Mobility Paths",
@@ -1102,6 +1834,11 @@ export const supports: ISupportType[] = [
       "Close-Quarters Combat",
     ],
     mapHates: ["Long Sightlines", "Choke-Heavy Maps", "Low Mobility Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Lifeweaver",
@@ -1119,8 +1856,24 @@ export const supports: ISupportType[] = [
     drawbacks: ["Set-Up Dependent", "Cooldown Dependent"],
     hates: ["Unstable Frontline", "Forces Fast Engagements"],
     friends: [
-      { name: "Sigma", role: "Tank" },
-      { name: "Ashe", role: "Damage" },
+      {
+        name: "Sigma",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Ashe",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -1133,6 +1886,11 @@ export const supports: ISupportType[] = [
       "High Mobility Paths",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Lucio",
@@ -1151,8 +1909,24 @@ export const supports: ISupportType[] = [
     drawbacks: ["Cooldown Dependent", "Inconsistent Damage"],
     hates: ["Stationary Playstyle", "Passive Play", "Set-Up Dependent"],
     friends: [
-      { name: "Reinhardt", role: "Tank" },
-      { name: "Genji", role: "Damage" },
+      {
+        name: "Reinhardt",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Genji",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Close-Quarters Combat",
@@ -1161,6 +1935,11 @@ export const supports: ISupportType[] = [
       "Environmental Hazards",
     ],
     mapHates: ["Long Sightlines", "Low Mobility Maps", "Choke-Heavy Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
 
   {
@@ -1178,11 +1957,32 @@ export const supports: ISupportType[] = [
     drawbacks: ["Passive Play", "Peel", "Inconsistent Damage"],
     hates: ["Unstable Frontline", "Split Engagement", "Cooldown Dependent"],
     friends: [
-      { name: "Pharah", role: "Damage" },
-      { name: "Sojourn", role: "Damage" },
+      {
+        name: "Pharah",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Sojourn",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["Open Skybox", "Vertical Engagements", "Flank Routes"],
     mapHates: ["Close-Quarters Combat", "Choke-Heavy Maps", "Enclosed Spaces"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Moira",
@@ -1194,11 +1994,32 @@ export const supports: ISupportType[] = [
     drawbacks: ["Cooldown Dependent", "Lacks Utility"],
     hates: ["Passive Play", "Inconsistent Damage", "Peel", "Lacks Utility"],
     friends: [
-      { name: "Junker Queen", role: "Tank" },
-      { name: "Reaper", role: "Damage" },
+      {
+        name: "Junker Queen",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Reaper",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: ["Close-Quarters Combat", "Enclosed Spaces", "Flank Routes"],
     mapHates: ["Long Sightlines", "Open Skybox", "Choke-Heavy Maps"],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
   {
     name: "Zenyatta",
@@ -1227,8 +2048,24 @@ export const supports: ISupportType[] = [
     ],
     hates: ["Inconsistent Damage", "High Resource Demand", "Lacks Utility"],
     friends: [
-      { name: "Winston", role: "Tank" },
-      { name: "Genji", role: "Damage" },
+      {
+        name: "Winston",
+        role: "Tank",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
+      {
+        name: "Genji",
+        role: "Damage",
+        synergyScore: 0,
+        mapScores: {},
+        rawScores: [],
+        mean: 0,
+        stdDev: 0,
+      },
     ],
     mapLikes: [
       "Long Sightlines",
@@ -1243,5 +2080,10 @@ export const supports: ISupportType[] = [
       "Vertical Engagements",
       "Enclosed Spaces",
     ],
+    synergyScore: 0,
+    mapScores: {},
+    rawScores: [],
+    mean: 0,
+    stdDev: 0,
   },
 ];

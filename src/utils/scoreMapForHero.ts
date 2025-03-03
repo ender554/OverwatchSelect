@@ -1,5 +1,5 @@
-import { IHeroType } from "../data/heroesUpdated";
-import { NewMapProperty } from "../types/types";
+import { IHeroType } from "../types/HeroTypes";
+import { NewMapProperty } from "../types/MapTypes";
 
 function scoreMapForHero(
   mapProperties: NewMapProperty[],
