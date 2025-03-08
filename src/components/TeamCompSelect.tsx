@@ -2,12 +2,7 @@
 import React, { useMemo } from "react";
 import { useMapScoreContext } from "../context/MapScoreContext";
 import { useTeamCompContext } from "../context/TeamCompContext";
-import type {
-  ITankType,
-  IDamageType,
-  ISupportType,
-  IHeroType,
-} from "../types/HeroTypes";
+import type { ITankType, IDamageType, ISupportType } from "../types/HeroTypes";
 
 const TeamCompSelect: React.FC = () => {
   const { heroMapScores } = useMapScoreContext();

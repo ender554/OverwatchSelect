@@ -11,6 +11,8 @@ export type GenericSynergy =
   | "Engage Initiation"
   | "Peel & Protection"
   | "Disruption"
+  | "Hitscan"
+  | "Projectile"
   | "Utility/CC Support";
 
 export type TankProvides = "Damage Mitigation" | "Disruption" | GenericSynergy;

@@ -11,13 +11,17 @@ import type {
   IDamageType,
   ISupportType,
   IHeroType,
+  TankNeeds,
+  SupportNeeds,
+  DamageNeeds,
+  Drawbacks,
 } from "../types/HeroTypes";
 import { computeAllHeroMapScores } from "../utils/heroScores";
+import { computeHeroSynergyScore } from "../utils/heroSynergyScore";
+import type { SynergyHero } from "../utils/heroSynergyScore";
 
 interface TeamCompContextType {
-  // All heroes loaded with their computed properties.
   allHeroes: IHeroType[];
-  // Selected heroes for each role.
   selectedTank: ITankType | null;
   setSelectedTank: (value: ITankType | null) => void;
   selectedDamage: [IDamageType | null, IDamageType | null];
@@ -26,12 +30,14 @@ interface TeamCompContextType {
   setSelectedSupport: (
     value: [ISupportType | null, ISupportType | null]
   ) => void;
-  // Unified selected team array.
   selectedTeam: (ITankType | IDamageType | ISupportType)[];
-  // Aggregated team properties.
-  teamHates: string[];
-  teamProvides: string[];
-  teamNeeds: string[];
+  // Aggregated 1:1 groups matching IHeroType properties.
+  tankNeedsGroup: TankNeeds[];
+  supportNeedsGroup: SupportNeeds[];
+  damageNeedsGroup: DamageNeeds[];
+  drawbacksGroup: Drawbacks[];
+  hatesGroup: Drawbacks[];
+  friendsGroup: IHeroType[];
 }
 
 const TeamCompContext = createContext<TeamCompContextType | undefined>(
@@ -39,10 +45,10 @@ const TeamCompContext = createContext<TeamCompContextType | undefined>(
 );
 
 export const TeamCompProvider = ({ children }: { children: ReactNode }) => {
-  // Load all heroes (each already has default computed values: synergyScore, mapScores, etc.)
-  const allHeroes = useMemo<IHeroType[]>(() => computeAllHeroMapScores(), []);
+  // Load all heroes with computed properties (without synergyScore adjustments yet).
+  const baseHeroes = useMemo<IHeroType[]>(() => computeAllHeroMapScores(), []);
 
-  // Start with no hero selected in any role.
+  // Role-based selections.
   const [selectedTank, setSelectedTank] = useState<ITankType | null>(null);
   const [selectedDamage, setSelectedDamage] = useState<
     [IDamageType | null, IDamageType | null]
@@ -51,7 +57,7 @@ export const TeamCompProvider = ({ children }: { children: ReactNode }) => {
     [ISupportType | null, ISupportType | null]
   >([null, null]);
 
-  // Create a unified team array from the selected roles.
+  // Build a unified team array.
   const selectedTeam = useMemo(
     () =>
       [selectedTank, ...selectedDamage, ...selectedSupport].filter(
@@ -60,48 +66,87 @@ export const TeamCompProvider = ({ children }: { children: ReactNode }) => {
     [selectedTank, selectedDamage, selectedSupport]
   );
 
-  // Aggregate team properties based on the selected team.
-  const teamHates = useMemo(() => {
-    return selectedTeam.flatMap((hero) => hero.hates);
-  }, [selectedTeam]);
+  // Aggregate team-level properties matching the hero type definitions.
+  const {
+    tankNeedsGroup,
+    supportNeedsGroup,
+    damageNeedsGroup,
+    drawbacksGroup,
+    hatesGroup,
+    friendsGroup,
+  } = useMemo(() => {
+    const tankNeedsGroup: TankNeeds[] = [];
+    const supportNeedsGroup: SupportNeeds[] = [];
+    const damageNeedsGroup: DamageNeeds[] = [];
+    const drawbacksGroup: Drawbacks[] = [];
+    const hatesGroup: Drawbacks[] = [];
+    const friendsGroup: IHeroType[] = [];
 
-  const teamProvides = useMemo(() => {
-    return selectedTeam.flatMap((hero) => hero.provides);
-  }, [selectedTeam]);
-
-  // For team needs, we assume that each hero's "needs" depends on their role:
-  // - Tanks: use their supportNeeds and damageNeeds.
-  // - Damage: use tankNeeds, supportNeeds, and damageNeeds.
-  // - Support: use tankNeeds, damageNeeds, and supportNeeds.
-  const teamNeeds = useMemo(() => {
-    return selectedTeam.flatMap((hero) => {
-      if (hero.role === "Tank") {
-        // Tanks often require help with protection and damage follow-up.
-        return [
-          ...(hero as ITankType).supportNeeds,
-          ...(hero as ITankType).damageNeeds,
-        ];
-      } else if (hero.role === "Damage") {
-        return [
-          ...(hero as IDamageType).tankNeeds,
-          ...(hero as IDamageType).supportNeeds,
-          ...(hero as IDamageType).damageNeeds,
-        ];
-      } else if (hero.role === "Support") {
-        return [
-          ...(hero as ISupportType).tankNeeds,
-          ...(hero as ISupportType).damageNeeds,
-          ...(hero as ISupportType).supportNeeds,
-        ];
+    selectedTeam.forEach((hero) => {
+      if (hero.drawbacks) drawbacksGroup.push(...hero.drawbacks);
+      if (hero.hates) hatesGroup.push(...hero.hates);
+      if (hero.friends) friendsGroup.push(...hero.friends);
+      if (hero.supportNeeds) supportNeedsGroup.push(...hero.supportNeeds);
+      if (hero.damageNeeds) damageNeedsGroup.push(...hero.damageNeeds);
+      if (
+        (hero.role === "Damage" || hero.role === "Support") &&
+        "tankNeeds" in hero &&
+        hero.tankNeeds
+      ) {
+        tankNeedsGroup.push(...hero.tankNeeds);
       }
-      return [];
     });
+
+    return {
+      tankNeedsGroup,
+      supportNeedsGroup,
+      damageNeedsGroup,
+      drawbacksGroup,
+      hatesGroup,
+      friendsGroup,
+    };
   }, [selectedTeam]);
+
+  // Compute raw synergy scores for each hero
+  const rawHeroScores = useMemo(() => {
+    return baseHeroes.map((hero) => ({
+      hero,
+      rawScore: computeHeroSynergyScore(hero as SynergyHero, {
+        tankNeedsGroup,
+        supportNeedsGroup,
+        damageNeedsGroup,
+        drawbacksGroup,
+        hatesGroup,
+        friendsGroup: friendsGroup.map((friend) => friend.name),
+      }),
+    }));
+  }, [
+    baseHeroes,
+    tankNeedsGroup,
+    supportNeedsGroup,
+    damageNeedsGroup,
+    drawbacksGroup,
+    hatesGroup,
+    friendsGroup,
+  ]);
+
+  // Find the maximum raw synergy score to use for normalization
+  const maxRawScore = useMemo(() => {
+    return Math.max(...rawHeroScores.map((entry) => entry.rawScore), 1); // Avoid divide by zero
+  }, [rawHeroScores]);
+
+  // Normalize the synergy scores to a percentage (0-100)
+  const updatedHeroes = useMemo(() => {
+    return rawHeroScores.map(({ hero, rawScore }) => ({
+      ...hero,
+      synergyScore: Math.round((rawScore / maxRawScore) * 100),
+    }));
+  }, [rawHeroScores, maxRawScore]);
 
   return (
     <TeamCompContext.Provider
       value={{
-        allHeroes,
+        allHeroes: updatedHeroes,
         selectedTank,
         setSelectedTank,
         selectedDamage,
@@ -109,9 +154,12 @@ export const TeamCompProvider = ({ children }: { children: ReactNode }) => {
         selectedSupport,
         setSelectedSupport,
         selectedTeam,
-        teamHates,
-        teamProvides,
-        teamNeeds,
+        tankNeedsGroup,
+        supportNeedsGroup,
+        damageNeedsGroup,
+        drawbacksGroup,
+        hatesGroup,
+        friendsGroup,
       }}
     >
       {children}

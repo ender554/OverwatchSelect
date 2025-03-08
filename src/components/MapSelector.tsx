@@ -1,6 +1,6 @@
 // src/components/MapSelector.tsx
 import React from "react";
-import { maps } from "../data/maps";
+import { maps } from "../data/oldMaps";
 import { useMapScoreContext } from "../context/MapScoreContext";
 
 const MapSelector: React.FC = () => {

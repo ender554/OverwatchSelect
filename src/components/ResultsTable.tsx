@@ -1,5 +1,5 @@
 // src/components/ResultsTable.tsx
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useMapScoreContext } from "../context/MapScoreContext";
 import { useTeamCompContext } from "../context/TeamCompContext";
 import { bellCurveTransform } from "../utils/heroScores";
@@ -11,162 +11,115 @@ const sanitizeHeroName = (name: string) =>
 const ResultsTable: React.FC = () => {
   const { selectedMapName, selectedRole, heroMapScores } = useMapScoreContext();
   const teamContext = useTeamCompContext();
+  // Overall score is the average of bell-curved score and synergy score.
+  const computeOverallScore = useCallback(
+    (bcScore: number, synergyScore: number): number => {
+      const MAP_WEIGHT = 0.6;
+      const SYNERGY_WEIGHT = 0.4;
+      if (synergyScore > 0) {
+        return bcScore * MAP_WEIGHT + synergyScore * SYNERGY_WEIGHT;
+      }
+      return bcScore;
+    },
+    []
+  );
 
-  useEffect(() => {
-    console.log("Full Team Context:", teamContext);
-  }, [teamContext]);
+  // Create a unified state: join heroMapScores with teamContext.allHeroes by name.
+  // This object contains the computed bell-curved score, synergy score, and overall score.
+  const combinedHeroes = useMemo(() => {
+    const heroesWithScores = heroMapScores
+      .filter((hero) =>
+        selectedMapName ? hero.mapScores[selectedMapName] !== undefined : true
+      )
+      .map((hero) => {
+        const teamHero = teamContext.allHeroes.find(
+          (h) => h.name === hero.name
+        );
+        const rawScore = selectedMapName
+          ? hero.mapScores[selectedMapName].score
+          : 0;
+        const bcScore = selectedMapName
+          ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
+          : 0;
+        const synergyScore = teamHero ? teamHero.synergyScore : 0;
+        const overallScore = computeOverallScore(bcScore, synergyScore);
+        return { ...hero, bcScore, synergyScore, overallScore };
+      });
 
-  // If no map is selected, we'll show all heroes (using defaults).
-  const sortedHeroRankings = useMemo(() => {
-    if (!selectedMapName) return heroMapScores;
-    const relevantHeroes = heroMapScores.filter(
-      (hero) => hero.mapScores[selectedMapName] !== undefined
+    // Find the highest overallScore
+    const maxOverallScore = Math.max(
+      ...heroesWithScores.map((h) => h.overallScore),
+      1
     );
-    relevantHeroes.sort(
-      (a, b) =>
-        b.mapScores[selectedMapName].score - a.mapScores[selectedMapName].score
-    );
-    return relevantHeroes;
-  }, [selectedMapName, heroMapScores]);
+
+    // Compute weightedScore (normalized score)
+    return heroesWithScores
+      .map((hero) => ({
+        ...hero,
+        weightedScore: (hero.overallScore / maxOverallScore) * 100, // Normalize to percentage
+      }))
+      .sort((a, b) => b.overallScore - a.overallScore); // Sorting remains the same
+  }, [
+    selectedMapName,
+    heroMapScores,
+    teamContext.allHeroes,
+    computeOverallScore,
+  ]);
+
+  // Render a table for a given role.
+  const renderTableForRole = (role: string) => (
+    <div style={{ flex: 1, margin: "0 1rem" }}>
+      <h3>{role}s</h3>
+      <table border={1} cellPadding={4}>
+        <thead>
+          <tr>
+            <th>Hero</th>
+            <th>Real Score</th>
+            <th>Bell-Curved Score</th>
+            <th>Synergy Score</th>
+            <th>Overall Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {combinedHeroes
+            .filter((hero) => hero.role === role)
+            .map((hero) => (
+              <tr key={hero.name}>
+                <td>
+                  <img
+                    src={`/heroThumbs/${sanitizeHeroName(hero.name)}.png`}
+                    alt={hero.name}
+                    width={75}
+                    height={75}
+                  />
+                  <div>{hero.name}</div>
+                </td>
+                <td>{hero.weightedScore.toFixed(2)}</td>
+                <td>{hero.bcScore.toFixed(2)}</td>
+                <td>{hero.synergyScore}</td>
+                <td>{hero.overallScore.toFixed(2)}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
+  );
 
   return (
     <div>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: "1rem",
         }}
       >
-        {(selectedRole === "All" || selectedRole === "Tank") && (
-          <div style={{ flex: 1, margin: "0 1rem" }}>
-            <h3>Tanks</h3>
-            <table border={1} cellPadding={4}>
-              <thead>
-                <tr>
-                  <th>Hero</th>
-                  <th>Bell-Curved Score</th>
-                  <th>Synergy Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedHeroRankings
-                  .filter((hero) => hero.role === "Tank")
-                  .map((hero) => {
-                    const rawScore = selectedMapName
-                      ? hero.mapScores[selectedMapName].score
-                      : 0;
-                    const bcScore = selectedMapName
-                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
-                      : 0;
-                    return (
-                      <tr key={hero.name}>
-                        <td>
-                          <img
-                            src={`/heroThumbs/${sanitizeHeroName(
-                              hero.name
-                            )}.png`}
-                            alt={hero.name}
-                            width={75}
-                            height={75}
-                          />
-                          <div>{hero.name}</div>
-                        </td>
-                        <td>{bcScore.toFixed(2)}</td>
-                        <td>{hero.synergyScore}</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {(selectedRole === "All" || selectedRole === "Damage") && (
-          <div style={{ flex: 1, margin: "0 1rem" }}>
-            <h3>Damage</h3>
-            <table border={1} cellPadding={4}>
-              <thead>
-                <tr>
-                  <th>Hero</th>
-                  <th>Bell-Curved Score</th>
-                  <th>Synergy Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedHeroRankings
-                  .filter((hero) => hero.role === "Damage")
-                  .map((hero) => {
-                    const rawScore = selectedMapName
-                      ? hero.mapScores[selectedMapName].score
-                      : 0;
-                    const bcScore = selectedMapName
-                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
-                      : 0;
-                    return (
-                      <tr key={hero.name}>
-                        <td>
-                          <img
-                            src={`/heroThumbs/${sanitizeHeroName(
-                              hero.name
-                            )}.png`}
-                            alt={hero.name}
-                            width={75}
-                            height={75}
-                          />
-                          <div>{hero.name}</div>
-                        </td>
-                        <td>{bcScore.toFixed(2)}</td>
-                        <td>{hero.synergyScore}</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {(selectedRole === "All" || selectedRole === "Support") && (
-          <div style={{ flex: 1, margin: "0 1rem" }}>
-            <h3>Supports</h3>
-            <table border={1} cellPadding={4}>
-              <thead>
-                <tr>
-                  <th>Hero</th>
-                  <th>Bell-Curved Score</th>
-                  <th>Synergy Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedHeroRankings
-                  .filter((hero) => hero.role === "Support")
-                  .map((hero) => {
-                    const rawScore = selectedMapName
-                      ? hero.mapScores[selectedMapName].score
-                      : 0;
-                    const bcScore = selectedMapName
-                      ? bellCurveTransform(rawScore, hero.mean, hero.stdDev)
-                      : 0;
-                    return (
-                      <tr key={hero.name}>
-                        <td>
-                          <img
-                            src={`/heroThumbs/${sanitizeHeroName(
-                              hero.name
-                            )}.png`}
-                            alt={hero.name}
-                            width={75}
-                            height={75}
-                          />
-                          <div>{hero.name}</div>
-                        </td>
-                        <td>{bcScore.toFixed(2)}</td>
-                        <td>{hero.synergyScore}</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {(selectedRole === "All" || selectedRole === "Tank") &&
+          renderTableForRole("Tank")}
+        {(selectedRole === "All" || selectedRole === "Damage") &&
+          renderTableForRole("Damage")}
+        {(selectedRole === "All" || selectedRole === "Support") &&
+          renderTableForRole("Support")}
       </div>
     </div>
   );
