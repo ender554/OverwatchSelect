@@ -2,16 +2,27 @@
 import React, { useMemo, useCallback } from "react";
 import { useMapScoreContext } from "../context/MapScoreContext";
 import { useTeamCompContext } from "../context/TeamCompContext";
+import { useTeamCompSixContext } from "../context/TeamSixContext";
 import { bellCurveTransform } from "../utils/heroScores";
 
 // Helper to sanitize hero names for image filenames.
 const sanitizeHeroName = (name: string) =>
   name.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-const ResultsTable: React.FC = () => {
+interface ResultsTableProps {
+  mode: "5v5" | "6v6";
+}
+
+const ResultsTable: React.FC<ResultsTableProps> = ({ mode }) => {
   const { selectedMapName, selectedRole, heroMapScores } = useMapScoreContext();
-  const teamContext = useTeamCompContext();
-  // Overall score is the average of bell-curved score and synergy score.
+
+  // Read from the correct context based on the mode.
+  const teamHeroes =
+    mode === "5v5"
+      ? useTeamCompContext().allHeroes
+      : useTeamCompSixContext().allHeroes;
+
+  // Overall score is the weighted average of bell-curved score and synergy score.
   const computeOverallScore = useCallback(
     (bcScore: number, synergyScore: number): number => {
       const MAP_WEIGHT = 0.6;
@@ -24,17 +35,16 @@ const ResultsTable: React.FC = () => {
     []
   );
 
-  // Create a unified state: join heroMapScores with teamContext.allHeroes by name.
-  // This object contains the computed bell-curved score, synergy score, and overall score.
+  // Combine heroMapScores with teamHeroes by matching on hero.name.
+  // This returns an object containing the computed bell-curved score,
+  // synergy score, and overall score.
   const combinedHeroes = useMemo(() => {
     const heroesWithScores = heroMapScores
       .filter((hero) =>
         selectedMapName ? hero.mapScores[selectedMapName] !== undefined : true
       )
       .map((hero) => {
-        const teamHero = teamContext.allHeroes.find(
-          (h) => h.name === hero.name
-        );
+        const teamHero = teamHeroes.find((h) => h.name === hero.name);
         const rawScore = selectedMapName
           ? hero.mapScores[selectedMapName].score
           : 0;
@@ -52,19 +62,14 @@ const ResultsTable: React.FC = () => {
       1
     );
 
-    // Compute weightedScore (normalized score)
+    // Normalize scores to percentage and sort descending.
     return heroesWithScores
       .map((hero) => ({
         ...hero,
-        weightedScore: (hero.overallScore / maxOverallScore) * 100, // Normalize to percentage
+        weightedScore: (hero.overallScore / maxOverallScore) * 100,
       }))
-      .sort((a, b) => b.overallScore - a.overallScore); // Sorting remains the same
-  }, [
-    selectedMapName,
-    heroMapScores,
-    teamContext.allHeroes,
-    computeOverallScore,
-  ]);
+      .sort((a, b) => b.overallScore - a.overallScore);
+  }, [selectedMapName, heroMapScores, teamHeroes, computeOverallScore]);
 
   // Render a table for a given role.
   const renderTableForRole = (role: string) => (

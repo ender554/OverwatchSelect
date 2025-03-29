@@ -1,6 +1,6 @@
 // src/utils/heroScores.ts
 import { tanks, supports, damage } from "../data/heroesUpdated";
-import { maps } from "../data/oldMaps";
+import { maps } from "../data/newMaps";
 import type { IHeroType } from "../types/HeroTypes";
 import scoreMapForHero from "./scoreMapForHero";
 

@@ -60,11 +60,14 @@ function getHeroNeeds(hero: SynergyHero): string[] {
 }
 
 /**
- * Computes the synergy score (0-100) for a given hero based on aggregated team data.
+ * Computes the synergy score for a given hero based on aggregated team data.
+ *
+ * This function is role‐aware and works for any team composition (including 6v6)
+ * as long as the aggregated team data is built from the full team selection.
  *
  * @param hero - The hero (of type SynergyHero) for which to compute the synergy score.
  * @param aggregated - The aggregated team data.
- * @returns A synergy score between 0 and 100.
+ * @returns A synergy score (which may be clamped as needed).
  */
 export function computeHeroSynergyScore(
   hero: SynergyHero,
@@ -90,7 +93,7 @@ export function computeHeroSynergyScore(
   score += needMatches.length * HERO_NEED_POINTS;
 
   // 3. Friend Bonus:
-  // Use hero.friends (an array of IHeroType) and compare by name.
+  // (Uncomment and adjust if you wish to award bonus points for friends.)
   // if (hero.friends) {
   //   const friendMatches = hero.friends.filter((friend) =>
   //     aggregated.friendsGroup.includes(friend.name)
@@ -114,8 +117,5 @@ export function computeHeroSynergyScore(
     score += drawbackMatches.length * DRAWBACK_PENALTY_POINTS;
   }
 
-  // Clamp final score between 0 and 100.
-  // if (score > 100) score = 100;
-  // if (score < 0) score = 0;
   return Math.round(score);
 }
